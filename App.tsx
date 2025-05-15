@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Animated,
   StatusBar,
+  ScrollView,
+  Switch,
 } from 'react-native';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -27,10 +29,7 @@ export default function App() {
       useNativeDriver: true,
     }).start();
 
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2500);
-
+    const timer = setTimeout(() => setShowSplash(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -74,11 +73,7 @@ export default function App() {
           },
           tabBarActiveTintColor: '#FF003C',
           tabBarInactiveTintColor: '#888',
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: '600',
-            marginBottom: 4,
-          },
+          tabBarLabelStyle: { fontSize: 12, fontWeight: '600', marginBottom: 4 },
           tabBarStyle: {
             backgroundColor: '#000',
             borderTopWidth: 0,
@@ -144,34 +139,81 @@ function HomeScreen() {
 }
 
 function NewsScreen() {
+  const news = [
+    { id: 1, headline: 'NRG DJ wins international award 🎧' },
+    { id: 2, headline: 'Top 10 songs this week 🔥' },
+    { id: 3, headline: 'NRG Radio expands to more cities 📻' },
+  ];
+
   return (
-    <View style={styles.centered}>
-      <Text style={styles.text}>Latest news will appear here.</Text>
-    </View>
+    <ScrollView style={styles.scrollContainer}>
+      <Text style={styles.sectionTitle}>Latest News</Text>
+      {news.map(item => (
+        <View key={item.id} style={styles.card}>
+          <Text style={styles.cardText}>{item.headline}</Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 function PodcastsScreen() {
+  const podcasts = [
+    { id: 1, title: 'Morning Energy Show – Episode 23' },
+    { id: 2, title: 'Late Night NRG – DJ Xclusive Set' },
+    { id: 3, title: 'Music & Vibes – Artist Interview' },
+  ];
+
   return (
-    <View style={styles.centered}>
-      <Text style={styles.text}>Podcasts coming soon.</Text>
-    </View>
+    <ScrollView style={styles.scrollContainer}>
+      <Text style={styles.sectionTitle}>Featured Podcasts</Text>
+      {podcasts.map(pod => (
+        <View key={pod.id} style={styles.card}>
+          <Text style={styles.cardText}>{pod.title}</Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 function EventsScreen() {
+  const events = [
+    { id: 1, name: 'NRG Festival Nairobi', date: 'June 20, 2025' },
+    { id: 2, name: 'NRG Coast Party', date: 'July 5, 2025' },
+  ];
+
   return (
-    <View style={styles.centered}>
-      <Text style={styles.text}>Upcoming events will be listed here.</Text>
-    </View>
+    <ScrollView style={styles.scrollContainer}>
+      <Text style={styles.sectionTitle}>Upcoming Events</Text>
+      {events.map(evt => (
+        <View key={evt.id} style={styles.card}>
+          <Text style={styles.cardText}>{evt.name}</Text>
+          <Text style={styles.cardSubText}>{evt.date}</Text>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 function SettingsScreen() {
+  const [darkMode, setDarkMode] = useState(true);
+  const [notifications, setNotifications] = useState(true);
+
   return (
-    <View style={styles.centered}>
-      <Text style={styles.text}>Settings</Text>
-    </View>
+    <ScrollView style={styles.scrollContainer}>
+      <Text style={styles.sectionTitle}>Settings</Text>
+      <View style={styles.settingRow}>
+        <Text style={styles.cardText}>Dark Mode</Text>
+        <Switch value={darkMode} onValueChange={setDarkMode} />
+      </View>
+      <View style={styles.settingRow}>
+        <Text style={styles.cardText}>Push Notifications</Text>
+        <Switch value={notifications} onValueChange={setNotifications} />
+      </View>
+      <View style={styles.card}>
+        <Text style={styles.cardText}>Version 1.0.0</Text>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -194,15 +236,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    padding: 16,
+  },
   centered: {
     flex: 1,
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  text: {
-    fontSize: 18,
-    color: '#fff',
   },
   title: {
     fontSize: 28,
@@ -223,5 +266,35 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#FF003C',
+    marginBottom: 16,
+  },
+  card: {
+    backgroundColor: '#111',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  cardText: {
+    fontSize: 16,
+    color: '#fff',
+  },
+  cardSubText: {
+    fontSize: 14,
+    color: '#aaa',
+    marginTop: 4,
+  },
+  settingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#111',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
   },
 });
